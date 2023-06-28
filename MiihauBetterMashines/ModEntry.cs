@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
@@ -31,63 +32,90 @@ namespace MiihauBetterMashines
         {
             if (!Context.IsWorldReady)
                 return;
-            this.Monitor.Log("IN FUNKTION", LogLevel.Debug);
+            
             // Check if the player has a Preserve Jar (Preservers Jar) in their inventory
             bool hasPreserveJar = false;
-            bool hasKit = false;
             foreach (Item item in Game1.player.items)
             {
                 if (item is StardewValley.Object obj && obj.name == "Preserves Jar")
                 {
-                    this.Monitor.Log("Hat JAR", LogLevel.Debug);
+                    
                     hasPreserveJar = true;
-                    break;
-
-                }
-            }
-            foreach (Item item in Game1.player.items)
-            {
-                if (item is StardewValley.Object obj && obj.name == "Stone")
-                {
-                    this.Monitor.Log("Hat Stone", LogLevel.Debug);
-                    hasKit = true;
                     break;
 
                 }
             }
 
             // Use the result (hasPreserveJar) for further processing
-            if (hasPreserveJar && hasKit)
+            if (hasPreserveJar)
             {
-                if (e.Button == SButton.MouseLeft && Game1.player.CursorSlotItem is StardewValley.Object obj && obj.name == "stone")
+                if (e.Button == SButton.MouseRight)
                 {
-                    // Player has a Preserve Jar (Preservers Jar) in their inventory
-                    for (int i = 0; i < Game1.player.items.Count; i++)
+                    Upgrader("Amethyst", "Preserves Jar", 12);
+                }
+
+            }
+            
+        }
+        private void Upgrader(String kitName, String startItem, Int32 endItemID)
+        {
+            
+            if (Game1.player.CursorSlotItem is StardewValley.Object obj && obj.name == kitName)
+            {
+
+
+                for (int i = 0; i < Game1.player.items.Count; i++)
+                {
+                    if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == startItem)
                     {
-                        if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == "Preserves Jar")
+                        // Remove the Preserve Jar from the player's inventory
+                        if (obj1.Stack > 1)
                         {
-                            // Remove the Preserve Jar from the player's inventory
-                            Game1.player.items.RemoveAt(i);
-
-                            Game1.player.addItemByMenuIfNecessary(new StardewValley.Object(Vector2.Zero, 12));
-
-                            Game1.playSound("axe");
-                            Game1.drawObjectDialogue("Your Preserve Jar has been transformed into a Keg!");
-                            break;
+                            obj1.Stack--;
                         }
+                        else
+                        {
+                            Game1.player.items.RemoveAt(i);
+                        }
+
+                        Game1.player.addItemByMenuIfNecessary(new StardewValley.Object(Vector2.Zero, endItemID));
+
+                        Game1.playSound("axe");
+                        //Game1.drawObjectDialogue("Your " + startItem + " upgraded!");
+                        
+
+                        if (Game1.player.CursorSlotItem.Stack > 1)
+                        {
+                            Game1.player.CursorSlotItem.Stack--;
+                        }
+                        else
+                        {
+                            Game1.player.CursorSlotItem = null;
+                        }
+                        break;
                     }
 
                 }
-                else
+                for (int i = 0; i < Game1.player.items.Count; i++)
                 {
-                    this.Monitor.Log("no Jar", LogLevel.Debug);
-                    // Player does not have a Preserve Jar (Preservers Jar) in their inventory
+                    if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == kitName)
+                    {
+                        if (obj1.Stack > 1)
+                        {
+                            obj1.Stack--;
+                        }
+                        else
+                        {
+                            Game1.player.items.RemoveAt(i);
+                        }
+                        break;
+                    }
                 }
+
             }
+
         }
-
-
-
 
     }
 }
+
