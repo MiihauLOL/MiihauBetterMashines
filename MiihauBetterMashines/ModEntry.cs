@@ -27,7 +27,6 @@ namespace MiihauBetterMashines
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
         }
 
-
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (!Context.IsWorldReady)
@@ -39,13 +38,10 @@ namespace MiihauBetterMashines
             {
                 if (item is StardewValley.Object obj && obj.name == "Preserves Jar")
                 {
-                    
                     hasPreserveJar = true;
                     break;
-
                 }
             }
-
             // Use the result (hasPreserveJar) for further processing
             if (hasPreserveJar)
             {
@@ -53,17 +49,12 @@ namespace MiihauBetterMashines
                 {
                     Upgrader("Amethyst", "Preserves Jar", 12);
                 }
-
             }
-            
         }
         private void Upgrader(String kitName, String startItem, Int32 endItemID)
         {
-            
             if (Game1.player.CursorSlotItem is StardewValley.Object obj && obj.name == kitName)
             {
-
-
                 for (int i = 0; i < Game1.player.items.Count; i++)
                 {
                     if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == startItem)
@@ -77,13 +68,10 @@ namespace MiihauBetterMashines
                         {
                             Game1.player.items.RemoveAt(i);
                         }
-
                         Game1.player.addItemByMenuIfNecessary(new StardewValley.Object(Vector2.Zero, endItemID));
 
                         Game1.playSound("axe");
                         //Game1.drawObjectDialogue("Your " + startItem + " upgraded!");
-                        
-
                         if (Game1.player.CursorSlotItem.Stack > 1)
                         {
                             Game1.player.CursorSlotItem.Stack--;
@@ -111,11 +99,8 @@ namespace MiihauBetterMashines
                         break;
                     }
                 }
-
             }
-
         }
-
     }
 }
 
