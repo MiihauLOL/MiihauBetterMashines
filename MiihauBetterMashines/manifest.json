@@ -1,0 +1,10 @@
+﻿{
+  "Name": "MiihauBetterMashines",
+  "Author": "Miihau",
+  "Version": "1.0.0",
+  "Description": "placeholer",
+  "UniqueID": "Miihau.MiihauBetterMashines",
+  "EntryDll": "MiihauBetterMashines.dll",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": []
+}
