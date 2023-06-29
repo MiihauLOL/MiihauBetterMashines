@@ -31,30 +31,31 @@ namespace MiihauBetterMashines
         {
             if (!Context.IsWorldReady)
                 return;
-            
-            // Check if the player has a Preserve Jar (Preservers Jar) in their inventory
-            bool hasPreserveJar = false;
-            foreach (Item item in Game1.player.items)
+
+
+            if (e.Button == SButton.MouseRight && Game1.player.CursorSlotItem is StardewValley.Object obj && obj.name == "preserves_jar_upgrade_kit")
             {
-                if (item is StardewValley.Object obj && obj.name == "Preserves Jar")
-                {
-                    hasPreserveJar = true;
-                    break;
-                }
-            }
-            // Use the result (hasPreserveJar) for further processing
-            if (hasPreserveJar)
-            {
-                if (e.Button == SButton.MouseRight)
-                {
-                    Upgrader("Amethyst", "Preserves Jar", 12);
-                }
+                Upgrader("Preserves Jar", "better_preserves_jar");
             }
         }
-        private void Upgrader(String kitName, String startItem, Int32 endItemID)
+        private void Upgrader(String startItem, String endItem)
         {
-            if (Game1.player.CursorSlotItem is StardewValley.Object obj && obj.name == kitName)
+            Int32 endItemID = GetParentSheetIndexByName(endItem);
+            bool hasNeededItem = false;
+            foreach (Item item in Game1.player.items)
             {
+                if (item is StardewValley.Object obj && obj.name == startItem)
+                {
+                    hasNeededItem = true;
+                    break;
+                }
+                
+            }
+            
+            // Use the result (hasPreserveJar) for further processing
+            if (hasNeededItem)
+            {
+
                 for (int i = 0; i < Game1.player.items.Count; i++)
                 {
                     if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == startItem)
@@ -84,7 +85,7 @@ namespace MiihauBetterMashines
                     }
 
                 }
-                for (int i = 0; i < Game1.player.items.Count; i++)
+                /*for (int i = 0; i < Game1.player.items.Count; i++)
                 {
                     if (Game1.player.items[i] is StardewValley.Object obj1 && obj1.name == kitName)
                     {
@@ -98,8 +99,21 @@ namespace MiihauBetterMashines
                         }
                         break;
                     }
+                }*/
+            }
+        }
+        private int GetParentSheetIndexByName(string itemName)
+        {
+            foreach (var kvp in Game1.bigCraftablesInformation)
+            {
+                if (kvp.Value.Split('/')[0].Equals(itemName))
+                {
+                    //Monitor.Log("key is: " + kvp.Key, LogLevel.Debug);
+                    return Convert.ToInt32(kvp.Key); 
                 }
             }
+            //Monitor.Log("key was not found :(", LogLevel.Debug);
+            return -1; // Return -1 if the item name was not found
         }
     }
 }
